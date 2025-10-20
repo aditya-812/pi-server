@@ -1,0 +1,278 @@
+# Portainer Media Stack Configuration
+# Saved on: $(date)
+# This is the complete Docker Compose configuration from Portainer
+
+version: "3.9"
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    privileged: true
+    user: "${PUID}:${PGID}"
+    environment:
+      - TZ=${TZ}
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PUBLISHED_URL}
+      - XDG_CACHE_HOME=/cache
+    volumes:
+      - /home/media/docker/jellyfin/config:/config
+      - /home/media/docker/jellyfin/cache:/cache
+      - /mnt/media:/data
+    ports:
+      - "8096:8096"
+    restart: unless-stopped
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/video19:/dev/video19
+      - /dev/video20:/dev/video20
+      - /dev/video21:/dev/video21
+      - /dev/video22:/dev/video22
+      - /dev/video23:/dev/video23
+      - /dev/video24:/dev/video24
+      - /dev/video25:/dev/video25
+      - /dev/video26:/dev/video26
+      - /dev/video27:/dev/video27
+      - /dev/video28:/dev/video28
+      - /dev/video29:/dev/video29
+      - /dev/video30:/dev/video30
+      - /dev/video31:/dev/video31
+      - /dev/video32:/dev/video32
+      - /dev/video33:/dev/video33
+      - /dev/video34:/dev/video34
+      - /dev/video35:/dev/video35
+      - /dev/video36:/dev/video36
+      - /dev/video37:/dev/video37
+    group_add:
+      - "992"
+      - "44"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8096/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      - /home/media/docker/qbittorrent/config:/config
+      - /mnt/media/Downloads:/downloads
+    ports:
+      - "8080:8080"
+      - "6881:6881"
+      - "6881:6881/udp"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /home/media/docker/sonarr/config:/config
+      - /mnt/media/TV-Shows:/tv
+      - /mnt/media/Downloads:/downloads
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /home/media/docker/radarr/config:/config
+      - /mnt/media/Movies:/movies
+      - /mnt/media/Downloads:/downloads
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7878/"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /home/media/docker/prowlarr/config:/config
+    ports:
+      - "9696:9696"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - "5055:5055"
+    volumes:
+      - /home/media/docker/jellyseerr/config:/app/config
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  flaresolverr:
+    image: flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=info
+      - MAX_CONCURRENCY=2
+      - TZ=${TZ}
+    ports:
+      - "8191:8191"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  glance-local:
+    image: glanceapp/glance:latest
+    container_name: glance-local
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - TS_HOST=${TS_HOST}
+      - TAILSCALE_API_KEY=${TAILSCALE_API_KEY}
+      - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+      - JELLYSTAT_API_KEY=${JELLYSTAT_API_KEY}
+      - JELLYFIN_API_KEY=${JELLYFIN_API_KEY}
+      - CHANGEME_PIHOLE_PASSWORD=${CHANGEME_PIHOLE_PASSWORD}
+    volumes:
+      - /home/media/docker/glance-local/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/media:/mnt/media:ro
+    ports:
+      - "192.168.29.160:8280:8080"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  glance-ts:
+    image: glanceapp/glance:latest
+    container_name: glance-ts
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - TS_HOST=${TS_HOST}
+      - TAILSCALE_API_KEY=${TAILSCALE_API_KEY}
+      - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+      - JELLYSTAT_API_KEY=${JELLYSTAT_API_KEY}
+      - JELLYFIN_API_KEY=${JELLYFIN_API_KEY}
+      - CHANGEME_PIHOLE_PASSWORD=${CHANGEME_PIHOLE_PASSWORD}
+    volumes:
+      - /home/media/docker/glance-ts/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/media:/mnt/media:ro
+    ports:
+      - "100.80.146.24:8280:8080"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr:latest
+    container_name: recyclarr
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    environment:
+      - TZ=${TZ}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+    volumes:
+      - /home/media/docker/recyclarr/config:/config
+    depends_on:
+      - radarr
+      - prowlarr
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  jellystat-db:
+    image: postgres:15-alpine
+    container_name: jellystat-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=jellystat
+      - POSTGRES_USER=jellystat
+      - POSTGRES_PASSWORD=${JELLYSTAT_DB_PASSWORD}
+      - TZ=${TZ}
+    volumes:
+      - /home/media/docker/jellystat/db:/var/lib/postgresql/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  jellystat:
+    image: cyfershepard/jellystat:latest
+    container_name: jellystat
+    restart: unless-stopped
+    ports:
+      - "8095:3000"
+    environment:
+      - JELLYFIN_URL=http://jellyfin:8096
+      - JELLYFIN_API_KEY=${JELLYFIN_API_KEY}
+      - POSTGRES_USER=jellystat
+      - POSTGRES_PASSWORD=${JELLYSTAT_DB_PASSWORD}
+      - POSTGRES_IP=jellystat-db
+      - POSTGRES_PORT=5432
+      - JWT_SECRET=${JELLYSTAT_JWT_SECRET}
+      - TZ=${TZ}
+    volumes:
+      - /home/media/docker/jellystat/config:/app/backend/backup-data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    depends_on:
+      - jellyfin
+      - jellystat-db
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --label-enable --cleanup --interval 86400
+    environment:
+      - TZ=${TZ}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  default:
+    name: mediacenter_default

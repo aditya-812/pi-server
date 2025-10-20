@@ -1,0 +1,14 @@
+# Media page (widgets only)
+- name: Media
+  columns:
+    - size: full
+      widgets:
+        - $include: radarr-releases.yml
+    - size: small
+      widgets:
+        - $include: sonarr-releases.yml
+    - size: small
+      widgets:
+        - $include: jellyfin-stats.yml
+        - $include: qbittorrent-stats.yml
+

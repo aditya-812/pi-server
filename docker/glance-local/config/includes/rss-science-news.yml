@@ -1,0 +1,7 @@
+- type: rss
+  title: Science News
+  cache: 1h
+  limit: 5
+  feeds:
+    - url: https://feeds.bbci.co.uk/news/science_and_environment/rss.xml
+      title: BBC Science

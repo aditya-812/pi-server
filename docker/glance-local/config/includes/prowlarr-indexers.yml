@@ -1,0 +1,31 @@
+- type: custom-api
+  title: Prowlarr Indexers
+  title-url: http://192.168.29.160:9696
+  url: http://prowlarr:9696/api/v1/indexer
+  headers:
+    X-Api-Key: "${PROWLARR_API_KEY}"
+  cache: 5m
+  template: |
+    <ul class="list list-gap-8">
+      {{ range .JSON.Array "" }}
+      <li class="flex items-center gap-8">
+        <div class="grow">
+          <div class="size-h4 color-primary">{{ .String "name" }}</div>
+          <div class="size-sm color-paragraph">{{ .String "description" }}</div>
+        </div>
+        <div class="text-right">
+          {{ if .Bool "enable" }}
+            <div class="color-positive size-sm">ENABLED</div>
+          {{ else }}
+            <div class="color-negative size-sm">DISABLED</div>
+          {{ end }}
+          {{ if .Bool "supportsRss" }}
+            <div class="size-xs color-paragraph">RSS</div>
+          {{ end }}
+          {{ if .Bool "supportsSearch" }}
+            <div class="size-xs color-paragraph">Search</div>
+          {{ end }}
+        </div>
+      </li>
+      {{ end }}
+    </ul>

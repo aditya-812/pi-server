@@ -1,0 +1,38 @@
+- type: custom-api
+  title: Speedtest
+  url: https://www.speedtest.net/api/js/servers?engine=js
+  cache: 30m
+  allow-insecure: true
+  template: |
+    {{ if ne .Response.StatusCode 200 }}
+      <div class="color-negative text-center">
+        <p>Speedtest Unavailable</p>
+        <p class="size-sm">Unable to fetch speed data</p>
+      </div>
+    {{ else }}
+      <div class="flex flex-column gap-3">
+        <div class="text-center">
+          <div class="size-h6 color-paragraph">Network Performance</div>
+        </div>
+        
+        <div class="flex justify-between text-center">
+          <div>
+            <div class="size-h5 color-highlight">--</div>
+            <div class="size-xs color-paragraph">DOWNLOAD</div>
+          </div>
+          <div>
+            <div class="size-h5 color-highlight">--</div>
+            <div class="size-xs color-paragraph">UPLOAD</div>
+          </div>
+          <div>
+            <div class="size-h5 color-highlight">--</div>
+            <div class="size-xs color-paragraph">PING</div>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <div class="size-xs color-paragraph">Run speedtest for results</div>
+        </div>
+      </div>
+    {{ end }}
+

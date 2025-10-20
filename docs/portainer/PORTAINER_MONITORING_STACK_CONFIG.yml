@@ -1,0 +1,117 @@
+# Portainer Monitoring Stack Configuration
+# Saved on: $(date)
+# This is the complete Docker Compose configuration from Portainer
+
+version: "3.9"
+services:
+  glances:
+    image: nicolargo/glances:latest
+    container_name: glances
+    restart: unless-stopped
+    ports:
+      - "61208:61208"
+    environment:
+      - GLANCES_OPT=-w
+      - TZ=Asia/Kolkata
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    cap_add:
+      - SYS_ADMIN
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  netdata:
+    image: netdata/netdata:latest
+    container_name: netdata
+    restart: unless-stopped
+    ports:
+      - "19999:19999"
+    environment:
+      - TZ=Asia/Kolkata
+    volumes:
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/media/docker/netdata/config:/etc/netdata
+      - /home/media/docker/netdata/lib:/var/lib/netdata
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    restart: unless-stopped
+    ports:
+      - "8085:80"
+    user: "1004:1004"
+    environment:
+      - PUID=1004
+      - PGID=1004
+      - TZ=Asia/Kolkata
+      - FB_ADMIN_USERNAME=admin
+      - FB_ADMIN_PASSWORD=${CHANGEME_FILEBROWSER_PASSWORD}
+    volumes:
+      - /home/media/docker/filebrowser/database:/database
+      - /home/media/docker/filebrowser/settings:/config
+      - /mnt/media:/srv/media                # existing media mount (rw)
+      - /home/media:/srv/home                # user home (rw) — allows editing dotfiles
+      - /etc:/srv/etc:ro                     # view system configs read-only
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  code-server:
+    image: linuxserver/code-server:latest
+    container_name: code-server
+    restart: unless-stopped
+    ports:
+      - "8443:8443"
+    environment:
+      - PUID=1004
+      - PGID=1004
+      - TZ=Asia/Kolkata
+      - PASSWORD=${CHANGEME_CODE_SERVER_PASSWORD}
+    volumes:
+      - /home/media/docker/code-server/config:/config
+      - /mnt/media:/home/media/mnt-media
+      - /home/media:/home/media                # mount your user home so editor opens it naturally
+      - /etc:/host-etc:ro        # <--- note host /etc now mounted at /host-etc (safe)
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    ports:
+      - "5353:53/tcp"
+      - "5353:53/udp"
+      - "8081:80/tcp" # Changed from 8080:80/tcp due to qBittorrent conflict
+    environment:
+      - TZ=Asia/Kolkata
+      - DNS1=8.8.8.8
+      - DNS2=8.8.4.4
+      - VIRTUAL_HOST=pihole
+      - ServerIP=192.168.29.160
+    volumes:
+      - /home/media/docker/pihole/etc-pihole:/etc/pihole
+      - /home/media/docker/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  default:
+    name: mediacenter_default
+    external: true
+
+

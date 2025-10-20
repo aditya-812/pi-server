@@ -1,0 +1,100 @@
+# Everything except docker directory and documentation
+/*
+!/docker/
+!/README.md
+!/LICENSE
+!/docs/
+!/.gitignore
+!/.env.template
+
+# Pi-hole data
+docker/pihole/etc-pihole/
+docker/pihole/etc-dnsmasq.d/
+
+# Docker volumes (if they contain sensitive data)
+docker/glance-local/data/
+docker/glance-ts/data/
+
+# Exclude problematic directories with permission issues
+docker/netdata/
+docker/jellystat/
+
+# Exclude untracked service directories (runtime data only)
+docker/code-server/
+docker/jellyfin/
+docker/jellypy/
+docker/jellyseerr/
+docker/overseerr/
+docker/prowlarr/
+docker/qbittorrent/
+docker/radarr/
+docker/sonarr/
+docker/uptime-kuma/
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# API keys and tokens
+*api-key*
+*token*
+*secret*
+*password*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Media files (if any)
+media/
+downloads/
+torrents/
+
+# Any files with actual secrets
+*secret*
+*password*
+*key*

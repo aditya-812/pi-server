@@ -1,0 +1,106 @@
+###################################################################################################
+# Recyclarr Configuration: use upstream templates (UHD Bluray + WEB)
+# - This file includes the official templates for quality definitions, quality profiles, and
+#   custom formats for the UHD Bluray + WEB profile.
+# - Edit base_url and api_key below for your Radarr instance.
+# - Do NOT add manual quality_profiles blocks here — let the templates provide the correct schema.
+###################################################################################################
+
+radarr:
+  uhd-bluray-web:
+    base_url: "http://radarr:7878"            # → change only if your Radarr is at a different host/port
+    api_key: !env_var RADARR_API_KEY
+
+    # Import the official templates from Recyclarr's guide repo.
+    # These templates contain the correct quality definitions & profiles for this common use case.
+    include:
+      - template: radarr-quality-definition-movie
+      - template: radarr-quality-profile-uhd-bluray-web
+      - template: radarr-custom-formats-uhd-bluray-web
+
+    # Local tweaks to the included custom formats (optional).
+    # I left out the placeholder and preserved your trash-id score mappings where present.
+    custom_formats:
+      - trash_ids:
+          - "493b6d1dbec3c3364c59d7607f7e3405"   # HDR general
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 2200
+
+      - trash_ids:
+          - "403816d65392c79236dcb6dd591aeda4"   # WEB Tier 02
+          - "af94e0fe497124d1f9ce732069ec8c3b"   # WEB Tier 03
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 1600
+
+      - trash_ids:
+          - "9170d55c319f4fe40da8711ba9d8050d"   # x265
+          - "839bea857ed2c0a8e084f3cbdbd65ecb"   # x265 (no HDR/DV)
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 1200
+
+      - trash_ids:
+          - "f700d29429c023a5734505e77daeaea7"   # DV Disk
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 1800
+
+      - trash_ids:
+          - "923b6abef9b17f937fab56cfcf89e1f1"   # DV (w/o HDR fallback)
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 0
+            
+###################################################################################################
+# Recyclarr combined config — Radarr + Sonarr instances                                             #
+# - Uses upstream templates for correctness                                                      #
+# - Keeps local custom-format tweaks                                                              #
+# - Replace base_url / set API env vars as needed                                                 #
+###################################################################################################
+
+# Sonarr block — multiple instances under the same top-level key
+sonarr:
+  main:
+    base_url: "http://sonarr:8989"
+    api_key: !env_var SONARR_API_KEY
+
+    include:
+      - template: sonarr-quality-definition-series
+      - template: sonarr-v4-quality-profile-web-2160p
+      - template: sonarr-v4-custom-formats-web-2160p
+      - template: sonarr-quality-definition-anime
+      - template: sonarr-v4-quality-profile-anime
+      - template: sonarr-v4-custom-formats-anime
+
+    # Combined custom_formats from both previous blocks (edit/remove entries as you like)
+    custom_formats:
+      - trash_ids:
+          - 9b27ab6498ec0f31a3353992e19434ca    # DV (w/o HDR fallback)
+        assign_scores_to:
+          - name: WEB-2160p
+
+      - trash_ids:
+          - 2016d1676f5ee13a5b7257ff86ac9a93    # SDR
+        assign_scores_to:
+          - name: WEB-2160p
+
+      - trash_ids:
+          - 026d5aadd1a6b4e550b134cb6c72b3ca    # Uncensored
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+            score: 0
+
+      - trash_ids:
+          - b2550eb333d27b75833e25b8c2557b38    # 10bit
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+            score: 0
+
+      - trash_ids:
+          - 418f50b10f1907201b6cfdf881f467b7    # Anime Dual Audio
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+            score: 0
+

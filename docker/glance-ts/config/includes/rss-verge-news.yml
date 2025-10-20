@@ -1,0 +1,7 @@
+- type: rss
+  title: The Verge
+  cache: 30m
+  limit: 8
+  feeds:
+    - url: https://www.theverge.com/rss/index.xml
+      title: The Verge

@@ -1,0 +1,7 @@
+- type: rss
+  title: Tech News
+  cache: 30m
+  limit: 7
+  feeds:
+    - url: https://hnrss.org/frontpage
+      title: Hacker News

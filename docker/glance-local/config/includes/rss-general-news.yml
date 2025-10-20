@@ -1,0 +1,7 @@
+- type: rss
+  title: General News
+  cache: 1h
+  limit: 5
+  feeds:
+    - url: https://feeds.bbci.co.uk/news/rss.xml
+      title: BBC News

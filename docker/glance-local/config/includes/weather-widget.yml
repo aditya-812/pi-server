@@ -1,0 +1,5 @@
+- type: weather
+  title: Weather
+  location: Mumbai, India
+  units: metric
+  hour-format: 24h

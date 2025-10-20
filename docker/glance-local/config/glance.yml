@@ -1,0 +1,414 @@
+define:
+  jellyfin: &jellyfin
+    title: Jellyfin
+    url: http://192.168.29.160:8096
+    check-url: http://jellyfin:8096/
+    icon: di:jellyfin
+
+  radarr: &radarr
+    title: Radarr
+    url: http://192.168.29.160:7878
+    check-url: http://radarr:7878/
+    icon: di:radarr
+
+  sonarr: &sonarr
+    title: Sonarr
+    url: http://192.168.29.160:8989
+    check-url: http://sonarr:8989/
+    icon: di:sonarr
+
+  qbittorrent: &qbittorrent
+    title: qBittorrent
+    url: http://192.168.29.160:8080
+    check-url: http://qbittorrent:8080/
+    icon: di:qbittorrent
+
+  prowlarr: &prowlarr
+    title: Prowlarr
+    url: http://192.168.29.160:9696
+    check-url: http://prowlarr:9696/
+    icon: di:prowlarr
+
+  filebrowser: &filebrowser
+    title: FileBrowser
+    url: http://192.168.29.160:8085
+    check-url: http://filebrowser:80/
+    icon: di:filebrowser
+
+  netdata: &netdata
+    title: Netdata
+    url: http://192.168.29.160:19999
+    check-url: http://netdata:19999/
+    icon: di:netdata
+
+  glances_web: &glances_web
+    title: Glances
+    url: http://192.168.29.160:61208
+    check-url: http://glances:61208/
+    icon: di:glances
+
+  code_server: &code_server
+    title: code-server
+    url: http://192.168.29.160:8443
+    check-url: http://code-server:8443/
+    icon: di:code
+
+  glance_app: &glance_app
+    title: Glance
+    url: http://192.168.29.160:8280
+    check-url: http://glance-local:8080/
+    icon: di:glance
+
+  jellystat: &jellystat
+    title: Jellystat
+    url: http://192.168.29.160:8095
+    check-url: http://jellystat:3000/
+    icon: di:jellystat
+
+  pihole: &pihole
+    title: Pi-hole
+    url: http://192.168.29.160:8081/admin
+    check-url: http://pihole:80/admin
+    icon: di:pihole
+
+  jellyseerr: &jellyseerr
+    title: Jellyseerr
+    url: http://192.168.29.160:5055
+    check-url: http://jellyseerr:5055/
+    icon: di:jellyseerr
+
+  flaresolverr: &flaresolverr
+    title: Flaresolverr
+    url: http://192.168.29.160:8191
+    check-url: http://flaresolverr:8191/
+    icon: di:flaresolverr
+
+  portainer: &portainer
+    title: Portainer
+    url: http://192.168.29.160:9000
+    check-url: http://192.168.29.160:9000/
+    icon: di:portainer
+
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Berlin
+                label: Berlin
+          - type: calendar
+          - type: search
+            title: Search
+            search-engine: google
+          - $include: includes/weather-widget.yml
+          - type: bookmarks
+            groups:
+              - title: Quick Links
+                links:
+                  - title: Dashboard
+                    url: http://192.168.29.160:8280
+                  - title: Netdata
+                    url: http://192.168.29.160:19999
+                  - title: Jellyfin
+                    url: http://192.168.29.160:8096
+                  - title: Glances
+                    url: http://192.168.29.160:61208
+                  - title: Pi-hole
+                    url: http://192.168.29.160:8081/admin
+
+      - size: full
+        widgets:
+          - type: html
+            title: System Snapshot
+            source: |
+              <h2>Media Server Dashboard</h2>
+              <p><strong>System:</strong> Raspberry Pi 5 Media Server</p>
+              <p><strong>Services:</strong> Jellyfin, Radarr, Sonarr, Prowlarr, Jellystat</p>
+              <p><strong>Storage:</strong> /mnt/media (External Storage)</p>
+              <p><strong>Network:</strong> Local + Tailscale Remote Access</p>
+              <p><strong>Status:</strong> All services running</p>
+
+          - type: monitor
+            title: Services
+            sites:
+              - <<: *jellyfin
+              - <<: *radarr
+              - <<: *sonarr
+              - <<: *prowlarr
+              - <<: *qbittorrent
+              - <<: *filebrowser
+              - <<: *netdata
+              - <<: *glances_web
+              - <<: *code_server
+              - <<: *glance_app
+              - <<: *jellystat
+              - <<: *jellyseerr
+              - <<: *flaresolverr
+              - <<: *portainer
+
+          - $include: includes/server-stats-widget.yml
+          - $include: includes/docker-containers-widget.yml
+
+      - size: small
+        widgets:
+          - type: to-do
+            id: personal
+          - type: bookmarks
+            title: Favourites
+            groups:
+              - title: Social
+                links:
+                  - title: YouTube
+                    url: https://youtube.com
+                    icon: di:youtube
+                  - title: Reddit
+                    url: https://reddit.com
+                    icon: di:reddit
+                  - title: X
+                    url: https://x.com
+                    icon: di:x-light
+                  - title: LinkedIn
+                    url: https://linkedin.com
+                    icon: di:linkedin
+                  - title: Instagram
+                    url: https://instagram.com
+                    icon: di:instagram
+                  - title: Steam
+                    url: https://store.steampowered.com
+                    icon: di:steam
+                  - title: Discord
+                    url: https://discord.com
+                    icon: di:discord
+                  - title: GitHub
+                    url: https://github.com/aditya-812/
+                    icon: auto-invert di:github
+              - title: AI & Productivity
+                links:
+                  - title: ChatGPT
+                    url: https://chatgpt.com
+                    icon: auto-invert di:chatgpt
+                  - title: Notion
+                    url: https://notion.so
+                    icon: di:notion
+
+  - name: Media
+    columns:
+      - size: small
+        widgets:
+          - $include: includes/jellyfin-stats.yml
+          - $include: includes/qbittorrent-stats.yml
+          - type: twitch-channels
+            channels:
+              - ohnepixel
+              - aceu
+            sort-by: live
+          - type: twitch-top-games
+            limit: 10
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - $include: includes/radarr-releases.yml
+              - $include: includes/sonarr-releases.yml
+          - type: videos
+            channels:
+              - UCsBjURrPoezykLs9EqgamOA
+              - UCBJycsmduvYEL83R_U4JriQ
+              - UCXuqSBlHAE6Xw-yeJA0Tunw
+              - UCO5QSoES5yn2Dw7YixDYT5Q
+              - UCHnyfMqiRRG1u-2MsSQLbXA
+            style: grid-cards
+            include-shorts: false
+            limit: 25
+      - size: small
+        widgets:
+          - $include: includes/jellypy-stats.yml
+
+  - name: News
+    columns:
+      - size: small
+        widgets:
+          - type: lobsters
+            tags:
+              - science
+              - finance
+              - education
+              - culture
+              - philosophy
+              - art
+              - historical
+            limit: 15
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - $include: includes/rss-general-news.yml
+              - $include: includes/rss-verge-news.yml
+              - $include: includes/rss-entertainment-news.yml
+              - $include: includes/rss-international-news.yml
+              - $include: includes/rss-science-news.yml
+          - type: group
+            widgets:
+              - type: reddit
+                subreddit: worldnews
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: news
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: science
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: space
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: entertainment
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: movies
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: television
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: music
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+      - size: small
+        widgets:
+          - $include: includes/weather-widget.yml
+          - type: html
+            title: News Info
+            source: |
+              <h3>News Sources</h3>
+              <p><strong>General:</strong> BBC News</p>
+              <p><strong>Tech:</strong> The Verge</p>
+              <p><strong>Entertainment:</strong> Variety</p>
+              <p><strong>International:</strong> BBC World News</p>
+              <p><strong>Science:</strong> BBC Science & Environment</p>
+              <p><strong>Linux:</strong> Phoronix (Tech page)</p>
+
+  - name: Network
+    columns:
+      - size: small
+        widgets:
+          - $include: includes/tailscale-devices.yml
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - $include: includes/prowlarr-indexers.yml
+              - $include: includes/service-uptime.yml
+      - size: small
+        widgets:
+          - type: dns-stats
+            title: Pi-hole Stats
+            service: pihole-v6
+            url: http://pihole:80
+            username: admin
+            password: ${CHANGEME_PIHOLE_PASSWORD}
+          - type: iframe
+            title: Netdata
+            source: http://192.168.29.160:19999
+            height: 260
+
+  - name: Tech
+    columns:
+      - size: small
+        widgets:
+          - type: repository
+            repository: glanceapp/glance
+            pull-requests-limit: 5
+            issues-limit: 3
+            commits-limit: 3
+          - type: releases
+            repositories:
+              - glanceapp/glance
+              - go-gitea/gitea
+              - dockerhub:nginx
+              - dockerhub:node
+              - dockerhub:alpine
+            limit: 10
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - $include: includes/rss-linux-news.yml
+              - type: hacker-news
+                limit: 15
+                collapse-after: 5
+          - type: group
+            widgets:
+              - type: reddit
+                subreddit: programming
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: webdev
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+              - type: reddit
+                subreddit: sysadmin
+                style: vertical-list
+                show-thumbnails: true
+                show-flairs: true
+                sort-by: hot
+                limit: 10
+          - type: lobsters
+            tags:
+              - ai
+              - mac
+              - go
+              - java
+            limit: 15
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+
+theme:
+  background-color: 240 27 11
+  contrast-multiplier: 1.5
+  primary-color: 321 100 71
+  positive-color: 165 78 51
+  negative-color: 360 100 71

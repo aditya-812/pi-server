@@ -1,0 +1,7 @@
+- type: rss
+  title: International News
+  cache: 1h
+  limit: 5
+  feeds:
+    - url: https://feeds.bbci.co.uk/news/world/rss.xml
+      title: BBC World News

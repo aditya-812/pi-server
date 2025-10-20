@@ -1,0 +1,73 @@
+- type: custom-api
+  title: Jellystat Analytics
+  title-url: http://192.168.29.160:8095
+  url: http://jellystat:3000/stats/getViewsOverTime?days=7
+  cache: 10m
+  allow-insecure: true
+  headers:
+    x-api-token: "${JELLYSTAT_API_KEY}"
+  template: |
+    {{ if eq .Response.StatusCode 401 }}
+      <div class="color-negative text-center">
+        <p>Jellystat Unauthorized</p>
+        <p class="size-sm">API authentication required</p>
+        <p class="size-xs color-paragraph">Configure Jellystat API key</p>
+      </div>
+    {{ else if ne .Response.StatusCode 200 }}
+      <div class="color-negative text-center">
+        <p>Jellystat not available</p>
+        <p class="size-sm">Install Jellystat for Jellyfin analytics</p>
+        <p class="size-xs color-paragraph">Status: {{ .Response.Status }}</p>
+      </div>
+    {{ else if .JSON.Exists "error" }}
+      <div class="color-negative text-center">
+        <p>Jellystat API Error</p>
+        <p class="size-sm">{{ .JSON.String "error" }}</p>
+      </div>
+    {{ else }}
+      <div class="flex flex-column gap-5">
+        {{ $totalViews := 0 }}
+        {{ $todayViews := 0 }}
+        {{ $yesterdayViews := 0 }}
+        {{ range $i := .JSON.Array "stats" }}
+          {{ $movies := $i.Int "Movies" }}
+          {{ $shows := $i.Int "Shows" }}
+          {{ $dayViews := add $movies $shows }}
+          {{ $totalViews = add $totalViews $dayViews }}
+          {{ if eq ($i.String "Key") "Oct 18, 2025" }}
+            {{ $todayViews = $dayViews }}
+          {{ else if eq ($i.String "Key") "Oct 17, 2025" }}
+            {{ $yesterdayViews = $dayViews }}
+          {{ end }}
+        {{ end }}
+        {{ $trend := sub $todayViews $yesterdayViews }}
+        
+        <div class="flex justify-between text-center">
+          <div>
+            <div class="color-highlight size-h3">{{ $totalViews | formatNumber }}</div>
+            <div class="size-h5 uppercase">Total Views</div>
+          </div>
+          <div>
+            <div class="color-highlight size-h3">{{ $todayViews | formatNumber }}</div>
+            <div class="size-h5 uppercase">Today</div>
+          </div>
+          <div>
+            <div class="color-highlight size-h3">{{ if gt $trend 0 }}+{{ end }}{{ $trend | formatNumber }}</div>
+            <div class="size-h5 uppercase">Trend</div>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <div class="size-h6 color-paragraph">8-Day Activity</div>
+        </div>
+        
+        <div class="flex justify-between text-center">
+          {{ range $i := .JSON.Array "stats" }}
+            <div class="flex flex-column gap-1">
+              <div class="size-xs color-paragraph">{{ add ($i.Int "Movies") ($i.Int "Shows") }}</div>
+              <div class="size-xs color-paragraph">{{ ($i.String "Key") }}</div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}

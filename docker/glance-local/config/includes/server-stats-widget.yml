@@ -1,0 +1,13 @@
+- type: server-stats
+  servers:
+    - type: local
+      name: Media Server
+      hide-swap: true
+      hide-mountpoints-by-default: true
+      mountpoints:
+        "/":
+          name: Root
+          hide: false
+        "/mnt/media":
+          name: Media Storage (1.8T)
+          hide: false

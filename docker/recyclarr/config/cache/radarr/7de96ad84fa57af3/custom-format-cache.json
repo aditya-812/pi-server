@@ -1,0 +1,201 @@
+{
+  "trash_id_mappings": [
+    {
+      "trash_id": "493b6d1dbec3c3364c59d7607f7e3405",
+      "custom_format_name": "HDR",
+      "custom_format_id": 1
+    },
+    {
+      "trash_id": "403816d65392c79236dcb6dd591aeda4",
+      "custom_format_name": "WEB Tier 02",
+      "custom_format_id": 2
+    },
+    {
+      "trash_id": "af94e0fe497124d1f9ce732069ec8c3b",
+      "custom_format_name": "WEB Tier 03",
+      "custom_format_id": 3
+    },
+    {
+      "trash_id": "9170d55c319f4fe40da8711ba9d8050d",
+      "custom_format_name": "x265",
+      "custom_format_id": 4
+    },
+    {
+      "trash_id": "839bea857ed2c0a8e084f3cbdbd65ecb",
+      "custom_format_name": "x265 (no HDR/DV)",
+      "custom_format_id": 5
+    },
+    {
+      "trash_id": "f700d29429c023a5734505e77daeaea7",
+      "custom_format_name": "DV (Disk)",
+      "custom_format_id": 6
+    },
+    {
+      "trash_id": "4d74ac4c4db0b64bff6ce0cffef99bf0",
+      "custom_format_name": "UHD Bluray Tier 01",
+      "custom_format_id": 7
+    },
+    {
+      "trash_id": "a58f517a70193f8e578056642178419d",
+      "custom_format_name": "UHD Bluray Tier 02",
+      "custom_format_id": 8
+    },
+    {
+      "trash_id": "e71939fae578037e7aed3ee219bbe7c1",
+      "custom_format_name": "UHD Bluray Tier 03",
+      "custom_format_id": 9
+    },
+    {
+      "trash_id": "c20f169ef63c5f40c2def54abaf4438e",
+      "custom_format_name": "WEB Tier 01",
+      "custom_format_id": 10
+    },
+    {
+      "trash_id": "e7718d7a3ce595f289bfee26adc178f5",
+      "custom_format_name": "Repack/Proper",
+      "custom_format_id": 11
+    },
+    {
+      "trash_id": "ae43b294509409a6a13919dedd4764c4",
+      "custom_format_name": "Repack2",
+      "custom_format_id": 12
+    },
+    {
+      "trash_id": "5caaaa1c08c1742aa4342d8c4cc463f2",
+      "custom_format_name": "Repack3",
+      "custom_format_id": 13
+    },
+    {
+      "trash_id": "ed38b889b31be83fda192888e2286d83",
+      "custom_format_name": "BR-DISK",
+      "custom_format_id": 14
+    },
+    {
+      "trash_id": "e6886871085226c3da1830830146846c",
+      "custom_format_name": "Generated Dynamic HDR",
+      "custom_format_id": 15
+    },
+    {
+      "trash_id": "90a6f9a284dff5103f6346090e6280c8",
+      "custom_format_name": "LQ",
+      "custom_format_id": 16
+    },
+    {
+      "trash_id": "e204b80c87be9497a8a6eaff48f72905",
+      "custom_format_name": "LQ (Release Title)",
+      "custom_format_id": 17
+    },
+    {
+      "trash_id": "dc98083864ea246d05a42df0d05f81cc",
+      "custom_format_name": "x265 (HD)",
+      "custom_format_id": 18
+    },
+    {
+      "trash_id": "b8cd450cbfa689c0259a01d9e29ba3d6",
+      "custom_format_name": "3D",
+      "custom_format_id": 19
+    },
+    {
+      "trash_id": "bfd8eb01832d646a0a89c4deb46f8564",
+      "custom_format_name": "Upscaled",
+      "custom_format_id": 20
+    },
+    {
+      "trash_id": "0a3f082873eb454bde444150b70253cc",
+      "custom_format_name": "Extras",
+      "custom_format_id": 21
+    },
+    {
+      "trash_id": "712d74cd88bceb883ee32f773656b1f5",
+      "custom_format_name": "Sing-Along Versions",
+      "custom_format_id": 22
+    },
+    {
+      "trash_id": "cae4ca30163749b891686f95532519bd",
+      "custom_format_name": "AV1",
+      "custom_format_id": 23
+    },
+    {
+      "trash_id": "cc5e51a9e85a6296ceefe097a77f12f4",
+      "custom_format_name": "BCORE",
+      "custom_format_id": 24
+    },
+    {
+      "trash_id": "16622a6911d1ab5d5b8b713d5b0036d4",
+      "custom_format_name": "CRiT",
+      "custom_format_id": 25
+    },
+    {
+      "trash_id": "2a6039655313bf5dab1e43523b62c374",
+      "custom_format_name": "MA",
+      "custom_format_id": 26
+    },
+    {
+      "trash_id": "b3b3a6ac74ecbd56bcdbefa4799fb9df",
+      "custom_format_name": "AMZN",
+      "custom_format_id": 27
+    },
+    {
+      "trash_id": "40e9380490e748672c2522eaaeb692f7",
+      "custom_format_name": "ATVP",
+      "custom_format_id": 28
+    },
+    {
+      "trash_id": "84272245b2988854bfb76a16e60baea5",
+      "custom_format_name": "DSNP",
+      "custom_format_id": 29
+    },
+    {
+      "trash_id": "509e5f41146e278f9eab1ddaceb34515",
+      "custom_format_name": "HBO",
+      "custom_format_id": 30
+    },
+    {
+      "trash_id": "5763d1b0ce84aff3b21038eea8e9b8ad",
+      "custom_format_name": "HMAX",
+      "custom_format_id": 31
+    },
+    {
+      "trash_id": "526d445d4c16214309f0fd2b3be18a89",
+      "custom_format_name": "Hulu",
+      "custom_format_id": 32
+    },
+    {
+      "trash_id": "e0ec9672be6cac914ffad34a6b077209",
+      "custom_format_name": "iT",
+      "custom_format_id": 33
+    },
+    {
+      "trash_id": "6a061313d22e51e0f25b7cd4dc065233",
+      "custom_format_name": "MAX",
+      "custom_format_id": 34
+    },
+    {
+      "trash_id": "170b1d363bd8516fbf3a3eb05d4faff6",
+      "custom_format_name": "NF",
+      "custom_format_id": 35
+    },
+    {
+      "trash_id": "c9fd353f8f5f1baf56dc601c4cb29920",
+      "custom_format_name": "PCOK",
+      "custom_format_id": 36
+    },
+    {
+      "trash_id": "e36a0ba1bc902b26ee40818a1d59b8bd",
+      "custom_format_name": "PMTP",
+      "custom_format_id": 37
+    },
+    {
+      "trash_id": "c2863d2a50c9acad1fb50e53ece60817",
+      "custom_format_name": "STAN",
+      "custom_format_id": 38
+    },
+    {
+      "trash_id": "923b6abef9b17f937fab56cfcf89e1f1",
+      "custom_format_name": "DV (w/o HDR fallback)",
+      "custom_format_id": 39
+    }
+  ],
+  "version": 1,
+  "instance_name": "uhd-bluray-web"
+}

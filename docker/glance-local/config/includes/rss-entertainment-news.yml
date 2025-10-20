@@ -1,0 +1,7 @@
+- type: rss
+  title: Entertainment News
+  cache: 30m
+  limit: 8
+  feeds:
+    - url: https://variety.com/feed/
+      title: Variety

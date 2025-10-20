@@ -1,0 +1,7 @@
+- type: rss
+  title: Linux News
+  cache: 30m
+  limit: 5
+  feeds:
+    - url: https://www.phoronix.com/rss.php
+      title: Phoronix

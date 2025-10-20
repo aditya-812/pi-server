@@ -1,0 +1,7 @@
+- type: rss
+  title: AI News
+  cache: 1h
+  limit: 5
+  feeds:
+    - url: https://www.artificialintelligence-news.com/feed/
+      title: AI News
