@@ -6,6 +6,7 @@
 !/docs/
 !/.gitignore
 !/.env.template
+!/dashboard-screenshot.png
 
 # Pi-hole data
 docker/pihole/etc-pihole/
