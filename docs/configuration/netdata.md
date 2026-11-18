@@ -29,8 +29,8 @@ The live stack is copied in `docs/portainer/PORTAINER_MONITORING_STACK_CONFIG.ym
 
 ### Limits
 - **History starts 2026-11-17**, when Netdata was redeployed. Longer windows only cover what exists; check `DATA_HRS`.
-- **Uplink is Wi-Fi.** `net.wlan0` is the Pi's real total (the default route is via wlan0). `net.eth0` is unplugged and always reads ~0.
-- **Host-network containers don't get a row.** This includes Netdata and Glances. Their traffic shows only in `net.wlan0`.
+- **Uplink is Ethernet since 2026-11-18 ~21:20.** `net.eth0` carries the traffic, and `net.wlan0` is a backup link (before that date, everything went over Wi-Fi). The Pi total is both added together: netreport prints both rows, and the widget adds them (`aggregation=sum`).
+- **Host-network containers don't get a row.** This includes Netdata and Glances. Their traffic shows only in the Pi total (`net.eth0` + `net.wlan0`).
 - **VPN group = one row.** gluetun, prowlarr and flaresolverr share one network namespace (since 2026-11-18). Netdata reports that namespace under a single chart, currently `flaresolverr`, so that row is all three. The gluetun and prowlarr rows only hold traffic from before 2026-11-18 19:20 and get no new data.
 - **Jellyfin's row includes LAN streaming**, not just internet traffic.
 - **Partly stopped containers:** since the fix, time with no data counts as 0, so they are no longer overcounted.
