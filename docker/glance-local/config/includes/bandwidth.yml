@@ -1,0 +1,63 @@
+# Per-container bandwidth from Netdata (same data and method as /usr/local/bin/netreport).
+# Method: 15-min average rates (kilobits/s) per point, summed × seconds-per-point (view.update_every) / 8e6 = GB.
+# Points with no data count as 0, so 7d/30d only add up what Netdata has (history starts 2026-11-17).
+# ponytail: Netdata sorts only when cardinality_limit is hit, so rx is capped at 16 (top 15 + "remaining N").
+- type: group
+  widgets:
+    - type: custom-api
+      title: 24 hours
+      title-url: http://192.168.29.160:19999
+      cache: 15m
+      url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=cgroup.net_net&scope_instances=*net_eth0*&group_by=label&group_by_label=cgroup_name&time_group=average&options=abs&format=json2&dimensions=received&after=-86400&points=96&cardinality_limit=16"
+      subrequests:
+        sent:
+          url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=cgroup.net_net&scope_instances=*net_eth0*&group_by=label&group_by_label=cgroup_name&time_group=average&options=abs&format=json2&dimensions=sent&after=-86400&points=96&cardinality_limit=50"
+        host:
+          url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=net.net&scope_instances=net.wlan0&group_by=dimension&time_group=average&options=abs&format=json2&after=-86400&points=96"
+      template: &bwtemplate |
+        {{ $k := div (toFloat (.JSON.Int "view.update_every")) 8000000.0 }}
+        {{ $tx := (.Subrequest "sent").JSON }}
+        {{ $h := (.Subrequest "host").JSON }}
+        {{ $hd := 0.0 }}{{ $hu := 0.0 }}
+        {{ range $h.Array "result.data" }}{{ $hd = add $hd (.Float "1.0") }}{{ $hu = add $hu (.Float "2.0") }}{{ end }}
+        <div class="flex justify-between margin-bottom-10">
+          <span class="color-highlight size-h4">Pi total (Wi-Fi)</span>
+          <span class="size-h4">↓ {{ printf "%.2f" (mul $hd $k) }} · ↑ {{ printf "%.2f" (mul $hu $k) }} GB</span>
+        </div>
+        {{ $rows := .JSON.Array "result.data" }}
+        {{ $txl := $tx.Array "result.labels" }}
+        {{ $txrows := $tx.Array "result.data" }}
+        <ul class="list list-gap-6 collapsible-container" data-collapse-after="10">
+        {{ range $i, $l := .JSON.Array "result.labels" }}{{ if gt $i 0 }}
+          {{ $name := $l.String "" }}{{ $other := findMatch "^remaining" $name }}
+          {{ $d := 0.0 }}{{ range $rows }}{{ $d = add $d (.Float (printf "%d.0" $i)) }}{{ end }}
+          {{ $u := 0.0 }}{{ range $j, $tl := $txl }}{{ if and (gt $j 0) (eq ($tl.String "") $name) }}{{ range $txrows }}{{ $u = add $u (.Float (printf "%d.0" $j)) }}{{ end }}{{ end }}{{ end }}
+          <li class="flex justify-between">
+            <span class="{{ if $other }}color-subdue{{ else }}color-highlight{{ end }}">{{ if $other }}others ({{ $name }}){{ else }}{{ $name }}{{ end }}</span>
+            <span>↓ {{ printf "%.2f" (mul $d $k) }}{{ if not $other }} · ↑ {{ printf "%.2f" (mul $u $k) }}{{ end }} GB</span>
+          </li>
+        {{ end }}{{ end }}
+        </ul>
+        <p class="size-h6 color-subdue margin-top-10">History starts 2026-11-17. Since 2026-11-18 19:20 the flaresolverr row is the whole VPN group (gluetun + prowlarr + flaresolverr). Host-network containers (netdata, glances) only count in the Pi total. Jellyfin includes LAN streaming.</p>
+    - type: custom-api
+      title: 7 days
+      title-url: http://192.168.29.160:19999
+      cache: 1h
+      url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=cgroup.net_net&scope_instances=*net_eth0*&group_by=label&group_by_label=cgroup_name&time_group=average&options=abs&format=json2&dimensions=received&after=-604800&points=672&cardinality_limit=16"
+      subrequests:
+        sent:
+          url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=cgroup.net_net&scope_instances=*net_eth0*&group_by=label&group_by_label=cgroup_name&time_group=average&options=abs&format=json2&dimensions=sent&after=-604800&points=672&cardinality_limit=50"
+        host:
+          url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=net.net&scope_instances=net.wlan0&group_by=dimension&time_group=average&options=abs&format=json2&after=-604800&points=672"
+      template: *bwtemplate
+    - type: custom-api
+      title: 30 days
+      title-url: http://192.168.29.160:19999
+      cache: 1h
+      url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=cgroup.net_net&scope_instances=*net_eth0*&group_by=label&group_by_label=cgroup_name&time_group=average&options=abs&format=json2&dimensions=received&after=-2592000&points=2880&cardinality_limit=16"
+      subrequests:
+        sent:
+          url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=cgroup.net_net&scope_instances=*net_eth0*&group_by=label&group_by_label=cgroup_name&time_group=average&options=abs&format=json2&dimensions=sent&after=-2592000&points=2880&cardinality_limit=50"
+        host:
+          url: "http://192.168.29.160:19999/api/v2/data?scope_contexts=net.net&scope_instances=net.wlan0&group_by=dimension&time_group=average&options=abs&format=json2&after=-2592000&points=2880"
+      template: *bwtemplate

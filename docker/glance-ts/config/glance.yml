@@ -26,25 +26,25 @@ define:
   prowlarr: &prowlarr
     title: Prowlarr
     url: http://${TS_HOST}:9696
-    check-url: http://prowlarr:9696/
+    check-url: http://gluetun:9696/
     icon: di:prowlarr
 
   filebrowser: &filebrowser
     title: FileBrowser
-    url: http://${TS_HOST}:8085
-    check-url: http://filebrowser:80/
+    url: http://${TS_HOST}:8085/files
+    check-url: http://filebrowser:80/files
     icon: di:filebrowser
 
   netdata: &netdata
     title: Netdata
     url: http://${TS_HOST}:19999
-    check-url: http://netdata:19999/
+    check-url: http://192.168.29.160:19999/
     icon: di:netdata
 
   glances_web: &glances_web
     title: Glances
     url: http://${TS_HOST}:61208
-    check-url: http://glances:61208/
+    check-url: http://192.168.29.160:61208/
     icon: di:glances
 
   code_server: &code_server
@@ -71,16 +71,16 @@ define:
     check-url: http://pihole:80/admin
     icon: di:pihole
 
-  jellyseerr: &jellyseerr
-    title: Jellyseerr
+  seerr: &seerr
+    title: Seerr
     url: http://${TS_HOST}:5055
-    check-url: http://jellyseerr:5055/
-    icon: di:jellyseerr
+    check-url: http://seerr:5055/
+    icon: di:seerr
 
   flaresolverr: &flaresolverr
     title: Flaresolverr
     url: http://${TS_HOST}:8191
-    check-url: http://flaresolverr:8191/
+    check-url: http://gluetun:8191/
     icon: di:flaresolverr
 
   portainer: &portainer
@@ -88,6 +88,18 @@ define:
     url: http://${TS_HOST}:9000
     check-url: http://${TS_HOST}:9000/
     icon: di:portainer
+
+  bazarr: &bazarr
+    title: Bazarr
+    url: http://${TS_HOST}:6767
+    check-url: http://bazarr:6767/
+    icon: di:bazarr
+
+  jdownloader: &jdownloader
+    title: JDownloader
+    url: http://${TS_HOST}:5800
+    check-url: http://jdownloader2:5800/
+    icon: di:jdownloader
 
 pages:
   - name: Home
@@ -146,9 +158,11 @@ pages:
               - <<: *code_server
               - <<: *glance_app
               - <<: *jellystat
-              - <<: *jellyseerr
+              - <<: *seerr
               - <<: *flaresolverr
               - <<: *portainer
+              - <<: *bazarr
+              - <<: *jdownloader
 
           - $include: includes/server-stats-widget.yml
           - $include: includes/docker-containers-widget.yml
@@ -334,6 +348,7 @@ pages:
             widgets:
               - $include: includes/prowlarr-indexers.yml
               - $include: includes/service-uptime.yml
+          - $include: includes/bandwidth.yml
       - size: small
         widgets:
           - type: dns-stats

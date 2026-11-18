@@ -10,7 +10,7 @@ This directory contains detailed configuration guides for individual services in
 
 ### **📊 Monitoring & Management**
 - **[Pi-hole DNS Setup](pihole.md)** - Ad blocking and DNS configuration *(Coming Soon)*
-- **[Netdata Monitoring](netdata.md)** - System metrics and alerting *(Coming Soon)*
+- **[Netdata Monitoring](netdata.md)** - Per-container bandwidth report (`netreport`). Alerting: *(Coming Soon)*
 - **[Tailscale VPN Setup](tailscale.md)** - Remote access configuration *(Coming Soon)*
 
 ### **🔧 System & Maintenance**

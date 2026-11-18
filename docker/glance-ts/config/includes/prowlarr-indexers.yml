@@ -1,7 +1,7 @@
 - type: custom-api
   title: Prowlarr Indexers
   title-url: http://${TS_HOST}:9696
-  url: http://prowlarr:9696/api/v1/indexer
+  url: http://gluetun:9696/api/v1/indexer
   headers:
     X-Api-Key: "${PROWLARR_API_KEY}"
   cache: 5m

@@ -81,6 +81,7 @@ When we install Docker later, we'll need the `media` user to manage containers w
 
 Docker containers can run as different users. We'll configure our containers to use:
 - **User ID (UID)**: 1000 (media user's ID)
+  - On this server `media` is actually **1004:1004**, so the stacks use `PUID=1004` / `PGID=1004`. Check yours with `id media`.
 - **Group ID (GID)**: 1000 (media group's ID)
 
 This ensures files created by containers are owned by the `media` user.
@@ -97,6 +98,7 @@ mkdir -p /home/media/docker
 
 # Create subdirectories for each service
 mkdir -p /home/media/docker/{jellyfin,sonarr,radarr,prowlarr,qbittorrent,jellyseerr}
+# `jellyseerr` host folder is still used for Seerr `/app/config` (legacy path; see Portainer stack).
 mkdir -p /home/media/docker/{glance-local,glance-ts,recyclarr,filebrowser}
 mkdir -p /home/media/docker/{pihole,netdata,jellystat}
 
@@ -107,6 +109,7 @@ mkdir -p /home/media/docker/radarr/config
 mkdir -p /home/media/docker/prowlarr/config
 mkdir -p /home/media/docker/qbittorrent/config
 mkdir -p /home/media/docker/jellyseerr/config
+# Seerr container mounts this path as /app/config
 mkdir -p /home/media/docker/glance-local/config
 mkdir -p /home/media/docker/glance-ts/config
 mkdir -p /home/media/docker/recyclarr/config

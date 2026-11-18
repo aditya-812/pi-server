@@ -245,7 +245,7 @@ glance-local/config/includes/
 
 ### Container Configuration
 
-#### Main Glance Container:
+#### Main Glance Container (removed; kept for reference only):
 ```yaml
 glance:
   image: glanceapp/glance
@@ -334,9 +334,9 @@ glance:
 ### Configuration Reload:
 ```bash
 # Restart Glance container to reload configuration
-docker restart glance
-docker restart glance-local
-docker restart glance-ts
+# Not needed: Glance reloads glance.yml by itself when the file changes
+# (log line: "Config file changed, reloading..."). Changes to an include file are picked up
+# after the next change to glance.yml (e.g. `touch glance.yml`).
 ```
 
 ### Log Monitoring:

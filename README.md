@@ -64,7 +64,7 @@ This setup features **dual Glance dashboards** - one optimized for local network
 | **Radarr** | Movie Management | 7878 | Automated movie downloading & organizing |
 | **Prowlarr** | Indexer Management | 9696 | Centralized indexer management for *arr apps |
 | **qBittorrent** | Download Client | 8080 | Torrent client with web interface |
-| **Jellyseerr** | Request Management | 5055 | User-friendly request system for media |
+| **Seerr** | Request Management | 5055 | Requests (successor to Jellyseerr; [migration guide](https://docs.seerr.dev/migration-guide)) |
 | **Flaresolverr** | Captcha Solver | 8191 | Bypasses Cloudflare protection for indexers |
 | **Recyclarr** | Quality Management | - | Automated quality profiles and custom formats |
 | **Jellystat** | Analytics | 8095 | Detailed Jellyfin usage statistics |
@@ -224,7 +224,7 @@ ports:
 - **[Portainer Stack Configurations](docs/portainer/)** - Docker Compose files for media and monitoring stacks
 
 ### **🎬 Media & Entertainment Services**
-- **[Media Server Stack](docs/media-server/)** - Jellyfin, Sonarr, Radarr, Prowlarr, qBittorrent, Jellyseerr setup
+- **[Media Server Stack](docs/media-server/)** - Jellyfin, Sonarr, Radarr, Prowlarr, qBittorrent, Seerr setup
 - **[Recyclarr Quality Management](docs/configuration/recyclarr.md)** - Quality profiles and custom formats *(Coming Soon)*
 - **[Jellyfin Configuration](docs/configuration/jellyfin.md)** - Hardware acceleration, libraries, users *(Coming Soon)*
 

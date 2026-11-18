@@ -30,7 +30,7 @@ This is a comprehensive media server stack running on a Raspberry Pi 5 with an e
 ├── radarr/config/             # Radarr configuration
 ├── sonarr/config/             # Sonarr configuration
 ├── prowlarr/config/           # Prowlarr configuration
-├── jellyseerr/config/         # Jellyseerr configuration
+├── jellyseerr/config/         # Seerr configuration (host folder name unchanged)
 ├── glance-local/config/       # Local Glance dashboard
 ├── glance-ts/config/          # Tailscale Glance dashboard
 ├── [REMOVED] glance/config/   # Main Glance (outdated, removed)
@@ -50,7 +50,7 @@ This is a comprehensive media server stack running on a Raspberry Pi 5 with an e
 ## Docker Compose Stacks
 
 ### Stack 1: Main Media Services
-**Location:** `/var/lib/docker/volumes/portainer_data/_data/compose/1/`
+**Location:** `/mnt/media/docker-root/volumes/portainer_data/_data/compose/1/` (Docker's data-root is on the HDD, see `/etc/docker/daemon.json`)
 
 #### Services:
 1. **Jellyfin** (Port 8096)
@@ -73,15 +73,18 @@ This is a comprehensive media server stack running on a Raspberry Pi 5 with an e
    - Health checks enabled
    - Manages `/mnt/media/Movies`
 
-5. **Prowlarr** (Port 9696)
+5. **Prowlarr** (Port 9696, published by Gluetun)
+   - Runs inside Gluetun's network: all indexer traffic goes through the VPN
+   - Other apps reach it at `http://gluetun:9696`
    - Indexer management
    - Centralized indexer configuration
 
-6. **Jellyseerr** (Port 5055)
+6. **Seerr** (Port 5055)
    - Request management for Jellyfin
    - User-friendly request interface
 
-7. **Flaresolverr** (Port 8191)
+7. **Flaresolverr** (Port 8191, published by Gluetun)
+   - Runs inside Gluetun's network; Prowlarr uses `http://localhost:8191`
    - CAPTCHA solving service
    - Supports Prowlarr indexers
 
@@ -103,8 +106,21 @@ This is a comprehensive media server stack running on a Raspberry Pi 5 with an e
     - Auto-updates containers
     - Runs daily with cleanup
 
+12. **Gluetun** (publishes 9696, 8191)
+    - VPN container for Prowlarr and FlareSolverr; see `docs/vpn-proxy/`
+    - Deliberately excluded from Watchtower (recreating it breaks its dependants)
+
+13. **Bazarr** (Port 6767)
+    - Subtitles for Movies and TV-Shows
+
+14. **Jellystat** (Port 8095) + **jellystat-db** (PostgreSQL)
+    - Jellyfin usage statistics
+
+15. **JDownloader2** (Port 5800)
+    - Direct-download client, output in `/mnt/media/Downloads/jdownloader`
+
 ### Stack 2: System Monitoring & Tools
-**Location:** `/var/lib/docker/volumes/portainer_data/_data/compose/2/`
+**Location:** `/mnt/media/docker-root/volumes/portainer_data/_data/compose/2/`
 
 #### Services:
 1. **Netdata** (Port 19999)
@@ -124,6 +140,8 @@ This is a comprehensive media server stack running on a Raspberry Pi 5 with an e
    - VS Code in browser
    - Access to media and home directories
    - Password: your-password
+
+5. **Pi-hole** (DNS on host port 5335, web UI on 8081)
 
 ## Environment Variables
 
@@ -153,7 +171,7 @@ CHANGEME_CODE_SERVER_PASSWORD=your-code-server-password
 - Sonarr: http://192.168.29.160:8989
 - Radarr: http://192.168.29.160:7878
 - Prowlarr: http://192.168.29.160:9696
-- Jellyseerr: http://192.168.29.160:5055
+- Seerr: http://192.168.29.160:5055
 - Glance Local: http://192.168.29.160:8280
 - Netdata: http://192.168.29.160:19999
 - Glances: http://192.168.29.160:61208
@@ -170,7 +188,7 @@ CHANGEME_CODE_SERVER_PASSWORD=your-code-server-password
 3. **Health Monitoring:** Built-in health checks for critical services
 4. **Remote Access:** Tailscale integration for secure remote management
 5. **Quality Management:** Recyclarr automates quality profile management
-6. **Request Management:** Jellyseerr provides user-friendly request interface
+6. **Request Management:** Seerr provides the user-friendly request interface
 7. **System Monitoring:** Netdata and Glances for comprehensive monitoring
 8. **File Management:** FileBrowser for web-based file operations
 9. **Development:** Code-Server for remote development
@@ -191,7 +209,7 @@ CHANGEME_CODE_SERVER_PASSWORD=your-code-server-password
 
 ## Backup Locations
 
-- **Docker Compose Files:** `/var/lib/docker/volumes/portainer_data/_data/compose/`
+- **Docker Compose Files:** `/mnt/media/docker-root/volumes/portainer_data/_data/compose/` (needs root; a copy of the media stack is in `docs/portainer/`)
 - **Container Configs:** `/home/media/docker/[service]/config/`
 - **Media Data:** `/mnt/media/`
 - **Environment Files:** In respective compose directories
@@ -289,7 +307,7 @@ CHANGEME_CODE_SERVER_PASSWORD=your-code-server-password
 - Config persistence: `/home/media/docker/prowlarr/config`
 - Extensive indexer definitions for global torrent site support
 
-### Jellyseerr (Request Management)
+### Seerr (Request Management)
 **Configuration File:** `/home/media/docker/jellyseerr/config/settings.json`
 
 **Key Settings:**
@@ -305,6 +323,7 @@ CHANGEME_CODE_SERVER_PASSWORD=your-code-server-password
 
 **Docker Configuration:**
 - Port: 5055
+- Container name: `seerr` (replace `jellyseerr` in other apps’ URLs on the Docker network)
 - Config persistence: `/home/media/docker/jellyseerr/config`
 
 ### Glance Dashboards
@@ -377,7 +396,7 @@ All services are interconnected via API keys for seamless automation:
 - Prowlarr manages indexers for both Radarr and Sonarr
 - Recyclarr syncs quality profiles using service APIs
 - Glance dashboards display real-time service statistics
-- Jellyseerr communicates with media management services for requests
+- Seerr communicates with media management services for requests
 
 ## Configuration File Locations
 
@@ -399,7 +418,7 @@ All services are interconnected via API keys for seamless automation:
 │   ├── config.xml              # Prowlarr configuration
 │   └── Definitions/            # 500+ indexer definitions
 ├── jellyseerr/config/
-│   └── settings.json           # Jellyseerr configuration
+│   └── settings.json           # Seerr configuration
 ├── glance-local/config/
 │   ├── glance.yml              # Local dashboard config
 │   └── includes/               # Widget definitions

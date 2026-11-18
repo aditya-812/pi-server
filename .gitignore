@@ -100,3 +100,12 @@ torrents/
 *password*
 *key*
 docker/recyclarr/config/repositories/
+
+# Added 2026-11-18: keep runtime app data and maintenance backups out of the public repo
+*.bak-*
+docker/bazarr/
+docker/jdownloader2/
+docker/gluetun/config/
+docker/recyclarr/config/cache/
+docker/recyclarr/config/state/
+docker/recyclarr/config/resources/
