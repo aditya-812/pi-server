@@ -1,7 +1,6 @@
 # Portainer Media Stack Configuration (mediastack, Portainer stack 1)
 # Copied from the live Portainer editor on 2026-11-18, after Gluetun was re-enabled.
 # Secrets come from Portainer env vars (${...}); none are stored here.
-# Public copy: one private service is left out. The full live stack is in /home/media/stack-media-full.yml (not in the repo).
 
 version: "3.9"
 services:
@@ -188,7 +187,7 @@ services:
       - OPENVPN_USER=${OPENVPN_USER}
       - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - SERVER_COUNTRIES=Switzerland
-      - HTTPPROXY=on          # Prowlarr indexer proxy: gluetun:8888, docker network only
+      - HTTPPROXY=on          # :8888, docker network only; currently unused (Prowlarr runs inside gluetun)
       - TZ=${TZ}
     ports:
       - "9696:9696"           # Prowlarr (lives in gluetun's network namespace)

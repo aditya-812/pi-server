@@ -31,7 +31,7 @@ The live stack is copied in `docs/portainer/PORTAINER_MONITORING_STACK_CONFIG.ym
 - **History starts 2026-11-17**, when Netdata was redeployed. Longer windows only cover what exists; check `DATA_HRS`.
 - **Uplink is Wi-Fi.** `net.wlan0` is the Pi's real total (the default route is via wlan0). `net.eth0` is unplugged and always reads ~0.
 - **Host-network containers don't get a row.** This includes Netdata and Glances. Their traffic shows only in `net.wlan0`.
-- **VPN group = one row.** gluetun, prowlarr and flaresolverr share one network namespace (since 2026-11-18). Netdata reports that namespace under a single chart, currently `flaresolverr`, so that row is all three. gluetun and prowlarr have no row of their own.
+- **VPN group = one row.** gluetun, prowlarr and flaresolverr share one network namespace (since 2026-11-18). Netdata reports that namespace under a single chart, currently `flaresolverr`, so that row is all three. The gluetun and prowlarr rows only hold traffic from before 2026-11-18 19:20 and get no new data.
 - **Jellyfin's row includes LAN streaming**, not just internet traffic.
 - **Partly stopped containers:** since the fix, time with no data counts as 0, so they are no longer overcounted.
 - **Accuracy:** the result can differ by about 2% depending on where the window starts (15-min point alignment). Netdata's hourly points lose partial hours (they gave 4.6 vs 5.14 GB), so the script avoids them.
@@ -48,7 +48,7 @@ To restore the old script: `sudo cp -p /usr/local/bin/netreport.bak-20261118 /us
 **Added:** 2026-11-18 · on the Network page of both dashboards · file `docker/glance-{local,ts}/config/includes/bandwidth.yml`
 
 - A Glance `group` widget with 3 tabs: rolling 24 hours, 7 days and 30 days. Each tab shows the Pi total (`net.wlan0`) plus each container's ↓/↑ GB, sorted by download. The top 15 get their own rows and the rest are merged into "others". Cache: 15 min (24h tab), 1 h (7d and 30d tabs).
-- Same method as netreport: Netdata v2 API, 15-min points (96 / 672 / 2880), each × `view.update_every` / 8e6, added up. One template is shared by all three tabs through a YAML anchor (`&bwtemplate`).
+- Same method as netreport (netreport uses the v1 API per chart; the widget uses the v2 API grouped by container): 15-min points (96 / 672 / 2880), each × `view.update_every` / 8e6, added up. One template is shared by all three tabs through a YAML anchor (`&bwtemplate`).
 - The 7d and 30d tabs only add up the history that exists. Until about 2026-12-17 the 30d tab is "since 2026-11-17".
 - **Verified 2026-11-18:** the 24h Pi total of 4.80 GB matches v1 (1440 and 96 points). The kernel counter shows 5.65 GB since boot, which is consistent. jdownloader2 shows 3.50 GB, matching Glances' own counter. All 3 tabs render on both dashboards with no widget errors, in about 1 s.
-- **Undo:** restore `includes/bandwidth.yml.bak-20261118` for the single-table 24h version. To remove the widget completely, delete the `- $include: includes/bandwidth.yml` line from both `glance.yml` files.
+- **Undo:** use git history for the earlier single-table 24h version. To remove the widget completely, delete the `- $include: includes/bandwidth.yml` line from both `glance.yml` files.

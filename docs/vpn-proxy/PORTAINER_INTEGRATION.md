@@ -1,6 +1,6 @@
 # Gluetun (ProtonVPN) for Prowlarr + FlareSolverr
 
-**Last updated:** 2026-11-18 (re-enabled; the previous version of this guide is in `PORTAINER_INTEGRATION.md.bak-20261118`)
+**Last updated:** 2026-11-18 (re-enabled; the previous version of this guide is in git history)
 
 ## What it does
 Prowlarr and FlareSolverr share gluetun's network (`network_mode: service:gluetun`), so all of their internet traffic leaves through ProtonVPN (Switzerland, OpenVPN UDP). If the VPN drops, gluetun's firewall blocks their traffic rather than leaking it over the home connection. qBittorrent and the other apps are not on the VPN.
@@ -59,4 +59,4 @@ Watchtower must not recreate gluetun: prowlarr and flaresolverr would be left at
 ## Troubleshooting
 - **Unhealthy for ~1 min after start:** the first server failed the TLS handshake, and gluetun retries another server after 15s. If it keeps happening, pin servers with `SERVER_HOSTNAMES=` (or switch to WireGuard).
 - **AUTH_FAILED:** wrong OpenVPN credentials in the Portainer env vars, or the subscription has lapsed.
-- **Subscription lapsed again:** restore the pre-VPN layout (see the Undo steps in `/home/media/agents.md` → Change Log 2026-11-18).
+- **Subscription lapsed again:** remove the gluetun service, give prowlarr back `ports: ["9696:9696"]` and flaresolverr `ports: ["8191:8191"]` (no `network_mode`). Then in Prowlarr set FlareSolverr to `http://flaresolverr:8191` and the apps' Prowlarr Server to `http://prowlarr:9696`, and point Glance's check-urls back to `prowlarr:`/`flaresolverr:`.

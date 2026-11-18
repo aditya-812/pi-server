@@ -6,7 +6,7 @@ This directory contains the gluetun VPN configuration for your media stack. Glue
 
 Since you're using Portainer, see the detailed guide in:
 
-📖 **[Portainer Integration Guide](../docs/vpn-proxy/PORTAINER_INTEGRATION.md)**
+📖 **[Portainer Integration Guide](../../docs/vpn-proxy/PORTAINER_INTEGRATION.md)**
 
 ## What's in This Directory
 
@@ -16,8 +16,8 @@ Since you're using Portainer, see the detailed guide in:
 
 All documentation is in `/home/media/docs/vpn-proxy/`:
 
-- [PORTAINER_INTEGRATION.md](../docs/vpn-proxy/PORTAINER_INTEGRATION.md) - Complete step-by-step guide for Portainer
-- [PROTONVPN_SETUP.md](../docs/vpn-proxy/PROTONVPN_SETUP.md) - How to get your ProtonVPN credentials
+- [PORTAINER_INTEGRATION.md](../../docs/vpn-proxy/PORTAINER_INTEGRATION.md) - Complete step-by-step guide for Portainer
+- [PROTONVPN_SETUP.md](../../docs/vpn-proxy/PROTONVPN_SETUP.md) - How to get your ProtonVPN credentials
 
 ## Basic Commands
 
@@ -26,7 +26,7 @@ All documentation is in `/home/media/docs/vpn-proxy/`:
 docker logs -f gluetun
 
 # Check VPN IP
-docker exec gluetun curl -s ifconfig.me
+docker exec gluetun wget -qO- https://ipinfo.io/ip
 
 # Restart
 docker restart gluetun

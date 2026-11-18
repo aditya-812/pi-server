@@ -334,9 +334,8 @@ glance:
 ### Configuration Reload:
 ```bash
 # Restart Glance container to reload configuration
-# Not needed: Glance reloads glance.yml by itself when the file changes
-# (log line: "Config file changed, reloading..."). Changes to an include file are picked up
-# after the next change to glance.yml (e.g. `touch glance.yml`).
+# Not needed: Glance watches glance.yml and every included file and reloads by itself
+# (log line: "Config file changed, reloading..."). If a change isn't picked up, `touch glance.yml`.
 ```
 
 ### Log Monitoring:
