@@ -1,15 +1,16 @@
-# Portainer Monitoring Stack Configuration
-# Saved on: $(date)
-# This is the complete Docker Compose configuration from Portainer
+# Portainer Monitoring Stack Configuration (monitoring, Portainer stack 2)
+# Copied from the live Portainer editor on 2026-11-18.
+# Secrets come from Portainer env vars (${...}); none are stored here.
+# netdata/glances use host networking + host pid (needed for per-container charts; see docs/configuration/netdata.md).
 
 version: "3.9"
 services:
   glances:
     image: nicolargo/glances:latest
     container_name: glances
+    pid: host
+    network_mode: host
     restart: unless-stopped
-    ports:
-      - "61208:61208"
     environment:
       - GLANCES_OPT=-w
       - TZ=Asia/Kolkata
@@ -17,6 +18,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
+      - /etc/os-release:/etc/os-release:ro
     cap_add:
       - SYS_ADMIN
     labels:
@@ -25,19 +27,25 @@ services:
   netdata:
     image: netdata/netdata:latest
     container_name: netdata
+    hostname: pi-nas
+    pid: host
+    network_mode: host
     restart: unless-stopped
-    ports:
-      - "19999:19999"
     environment:
       - TZ=Asia/Kolkata
     volumes:
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /home/media/docker/netdata/config:/etc/netdata
       - /home/media/docker/netdata/lib:/var/lib/netdata
+      - netdata_cache:/var/cache/netdata
+      - /:/host/root:ro,rslave
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     cap_add:
       - SYS_PTRACE
       - SYS_ADMIN
@@ -92,11 +100,12 @@ services:
     container_name: pihole
     restart: unless-stopped
     ports:
-      - "5353:53/tcp"
-      - "5353:53/udp"
-      - "8081:80/tcp" # Changed from 8080:80/tcp due to qBittorrent conflict
+      - "5335:53/tcp"
+      - "5335:53/udp"
+      - "8081:80/tcp"
     environment:
       - TZ=Asia/Kolkata
+      - WEBPASSWORD=${CHANGEME_PIHOLE_PASSWORD}
       - DNS1=8.8.8.8
       - DNS2=8.8.4.4
       - VIRTUAL_HOST=pihole
@@ -109,9 +118,10 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
+volumes:
+  netdata_cache:
+
 networks:
   default:
     name: mediacenter_default
     external: true
-
-

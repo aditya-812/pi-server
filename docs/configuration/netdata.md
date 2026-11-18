@@ -25,7 +25,7 @@ Netdata runs in the Portainer stack **monitoring** (Stacks → monitoring → Ed
 - the volume `monitoring_netdata_cache` → `/var/cache/netdata`, which holds the metric history. It lives under the Docker data-root on the HDD (`/mnt/media/docker-root`).
 
 Per-container charts are named `cgroup_<name>.net_eth0`.
-`docs/portainer/PORTAINER_MONITORING_STACK_CONFIG.yml` still shows the older Netdata config (published ports, no host pid). Trust the live stack in Portainer.
+The live stack is copied in `docs/portainer/PORTAINER_MONITORING_STACK_CONFIG.yml` (updated 2026-11-18).
 
 ### Limits
 - **History starts 2026-11-17**, when Netdata was redeployed. Longer windows only cover what exists; check `DATA_HRS`.
