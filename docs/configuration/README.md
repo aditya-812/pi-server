@@ -15,7 +15,7 @@ This directory contains detailed configuration guides for individual services in
 
 ### **🔧 System & Maintenance**
 - **[Environment Variables Guide](environment.md)** - Complete .env setup *(Coming Soon)*
-- **[Backup & Recovery](backup.md)** - Configuration and data backup strategies *(Coming Soon)*
+- **[Backup & Recovery](backup.md)** - Nightly encrypted config backup (restic) + manual off-Pi copy
 
 ## 🚀 Contributing
 

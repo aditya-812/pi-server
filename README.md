@@ -235,7 +235,7 @@ ports:
 
 ### **🔧 System & Maintenance**
 - **[Environment Variables Guide](docs/configuration/environment.md)** - Complete .env setup *(Coming Soon)*
-- **[Backup & Recovery](docs/configuration/backup.md)** - Configuration and data backup strategies *(Coming Soon)*
+- **[Backup & Recovery](docs/configuration/backup.md)** - Nightly encrypted config backup (restic) + manual off-Pi copy
 - **[Troubleshooting Guide](docs/troubleshooting/)** - Common issues and solutions *(Coming Soon)*
 
 ## 🛣️ **Roadmap**
