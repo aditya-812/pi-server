@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
+# Recyclarr v8 config, rewritten 2026-11-19 (the old file was config.yml, which v8 ignores).
+# Goals: movies 4K, TV 1080p (4K and anime profiles available per show), Bluray preferred over WEB-DL,
+# small efficient encodes (x265, compact audio).
+# - File SIZES are not managed here (no quality_definition); they are set in Radarr/Sonarr directly.
+# - "Preferred Group" / "Backup Group" are release-group custom formats created in the apps themselves.
+#   Their scores are set in the apps and protected by reset_unmatched_scores.except.
+# - TRaSH "LQ" is excluded and "x265 (HD)"/"x265 (no HDR/DV)" are positive here: the TRaSH defaults
+#   (-10000) block the small encodes this setup is meant to prefer.
+
+radarr:
+  movies:
+    base_url: http://radarr:7878
+    api_key: !env_var RADARR_API_KEY
+    quality_profiles:
+      - trash_id: 64fb5f9858489bdac2af690e27c8f42f  # UHD Bluray + WEB (Bluray-2160p > WEB-2160p)
+        reset_unmatched_scores:
+          enabled: true
+          except: [Preferred Group, Backup Group]
+    custom_format_groups:
+      add:
+        - trash_id: a3ac6af01d78e4f21fcb75f601ac96df  # [Unwanted] Unwanted Formats
+          exclude:
+            - 90a6f9a284dff5103f6346090e6280c8  # LQ (would block the preferred groups)
+    custom_formats:
+      - trash_ids:
+          - 493b6d1dbec3c3364c59d7607f7e3405  # HDR
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 2200
+      - trash_ids:
+          - 403816d65392c79236dcb6dd591aeda4  # WEB Tier 02
+          - af94e0fe497124d1f9ce732069ec8c3b  # WEB Tier 03
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 1600
+      - trash_ids:
+          - 9170d55c319f4fe40da8711ba9d8050d  # x265
+          - 839bea857ed2c0a8e084f3cbdbd65ecb  # x265 (no HDR/DV)
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 1200
+      - trash_ids:
+          - f700d29429c023a5734505e77daeaea7  # DV Disk
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 1800
+      - trash_ids:
+          - 923b6abef9b17f937fab56cfcf89e1f1  # DV (w/o HDR fallback)
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 0
+      - trash_ids:   # lossless/big audio: neutral, so compact encodes are not outscored
+          - 496f355514737f7d83bf7aa4d24f8169  # TrueHD ATMOS
+          - 2f22d89048b01681dde8afe203bf2e95  # DTS X
+          - 417804f7f2c4308c1f4c5d380d4c4475  # ATMOS (undefined)
+          - 3cafb66171b47f226146a0770576870f  # TrueHD
+          - dcf3ec6938fa32445f590a4da84256cd  # DTS-HD MA
+          - a570d4a0e56a2874b64e5bfa55202a1b  # FLAC
+          - e7c2fcae07cbada050a0af3357491d7b  # PCM
+          - 8e109e50e0a0b83a5098b056e13bf6db  # DTS-HD HRA
+        assign_scores_to:
+          - name: UHD Bluray + WEB
+            score: 0
+
+sonarr:
+  tv:
+    base_url: http://sonarr:8989
+    api_key: !env_var SONARR_API_KEY
+    quality_profiles:
+      - name: Bluray + WEB 1080p          # default for TV
+        reset_unmatched_scores:
+          enabled: true
+          except: [Preferred Group]
+        upgrade:
+          allowed: true
+          until_quality: Bluray-1080p
+          until_score: 10000
+        min_format_score: 0
+        qualities:
+          - name: Bluray-1080p
+          - name: WEB 1080p
+            qualities: [WEBDL-1080p, WEBRip-1080p]
+      - name: Bluray + WEB 2160p          # pick per show for 4K
+        reset_unmatched_scores:
+          enabled: true
+          except: [Preferred Group]
+        upgrade:
+          allowed: true
+          until_quality: Bluray-2160p
+          until_score: 10000
+        min_format_score: 0
+        qualities:
+          - name: Bluray-2160p
+          - name: WEB 2160p
+            qualities: [WEBDL-2160p, WEBRip-2160p]
+      - trash_id: 20e0fc959f1f1704bed501f23bdae76f  # [Anime] Remux-1080p: pick per show (series type Anime)
+        reset_unmatched_scores:
+          enabled: true
+    custom_formats:
+      - trash_ids:
+          - 85c61753df5da1fb2aab6f2a47426b09  # BR-DISK
+          - fbcb31d8dabd2a319072b84fc0b7249c  # Extras
+          - 32b367365729d530ca1c124a0b180c64  # Bad Dual Groups
+          - 23297a736ca77c0fc8e70f8edd7ee56c  # Upscaled
+        assign_scores_to:
+          - name: Bluray + WEB 1080p
+            score: -10000
+          - name: Bluray + WEB 2160p
+            score: -10000
+      - trash_ids:
+          - 47435ece6b99a0b477caf360e79ba0bb  # x265 (HD): prefer small 1080p encodes
+        assign_scores_to:
+          - name: Bluray + WEB 1080p
+            score: 500
+      - trash_ids:
+          - 505d871304820ba7106b693be6fe4a9e  # HDR
+        assign_scores_to:
+          - name: Bluray + WEB 2160p
+            score: 500
+      - trash_ids:
+          - ec8fa7296b64e8cd390a1600981f3923  # Repack/Proper
+        assign_scores_to:
+          - name: Bluray + WEB 1080p
+          - name: Bluray + WEB 2160p
+      - trash_ids:   # anime: kept neutral, as in the previous config
+          - 026d5aadd1a6b4e550b134cb6c72b3ca  # Uncensored
+          - b2550eb333d27b75833e25b8c2557b38  # 10bit
+          - 418f50b10f1907201b6cfdf881f467b7  # Anime Dual Audio
+        assign_scores_to:
+          - name: "[Anime] Remux-1080p"
+            score: 0
